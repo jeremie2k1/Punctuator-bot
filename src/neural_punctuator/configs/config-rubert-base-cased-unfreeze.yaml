@@ -1,0 +1,42 @@
+debug:
+  summary_writer: true
+  break_train_loop: false
+
+experiment:
+  name: rubert-base-cased
+
+data:
+  data_path: './data_cleaning/DeepPavlov/rubert-base-cased/' # your path
+  output_labels: [empty, period, question, comma]
+
+preprocessor:
+  preproc_arg: TODO
+
+model:
+  name: deep-pavlov
+  load_model_repo: DeepPavlov/rubert-base-cased
+  bert_output_dim: 768
+  linear_hidden_dim: 1568
+  num_classes: 4
+  seq_len: 512
+  dropout: 0.2
+
+  save_model_path: './src/neural_punctuator/models/' # your path
+
+trainer:
+  use_gpu: false # change to cuda:0 if use gpu
+  batch_size: 4 # start: 4
+  num_epochs: 2 # start: 12
+  shuffle: true
+  optimizer: adamw
+  loss: NLLLoss
+  base_learning_rate: 0.00003 #3e-5
+  classifier_learning_rate: 0.0001 #1e-4
+  metrics: [precision, recall, f-score, auc]
+  warmup_steps: 300
+  clip_seq: 32
+  grad_clip: 1.5
+  train_bert: true
+  #load_model:
+  seq_shift: 32   # Shift each training sample +-seq_shift to get more different samples
+  show_confusion_matrix: false
